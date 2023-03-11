@@ -34,12 +34,13 @@ import { Public } from '../../common/decorators/public.decorator';
 @ApiTags('User')
 @UsePipes(new ValidationPipe())
 @UseInterceptors(ClassSerializerInterceptor)
-@UseGuards(PermissionsGuard)
+// @UseGuards(PermissionsGuard)
 export class UserController implements IUserController {
   constructor(private readonly usersService: UserService) {}
 
   //example how permissions work
-  @Permission(UserPermissions.CAN_ACCESS_HELLO_METHOD)
+  // @Permission(UserPermissions.CAN_ACCESS_HELLO_METHOD)
+  @Public()
   @Get('hello')
   async getHello() {
     return `Hello from Hello Method`;

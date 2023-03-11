@@ -10,7 +10,7 @@ export abstract class BaseCustomRepository<T extends AuditEntity>
     return await super.findOne({
       ...options,
       where: {
-        ...options.where,
+        ...options?.where,
         deleted_at: null,
       },
     });
@@ -20,7 +20,7 @@ export abstract class BaseCustomRepository<T extends AuditEntity>
     return await super.find({
       ...options,
       where: {
-        ...options.where,
+        ...options?.where,
         deleted_at: null,
       },
     });
