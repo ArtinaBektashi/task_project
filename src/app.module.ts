@@ -14,6 +14,7 @@ import { EventEmitter } from 'stream';
 import { MailService } from './services/mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ProjectModule } from './api/projects/project.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     NestEmitterModule.forRoot(new EventEmitter()),
     AuthModule,
     UserModule,
+    ProjectModule
   ],
   controllers: [AppController],
   providers: [

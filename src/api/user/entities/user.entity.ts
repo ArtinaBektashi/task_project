@@ -1,8 +1,9 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, Index } from 'typeorm';
+import { Column, JoinTable, ManyToMany, Entity, Index,  } from 'typeorm';
 import { UserGender } from '../enums/userGender.enum';
 import { UserRoles } from '../enums/roles.enum';
 import { AuditEntity } from '../../../common/db/customBaseEntites/AuditEntity';
+import { UserStatus } from '../enums/userStatus.enum';
 
 @Entity('users')
 export class User extends AuditEntity {
@@ -52,4 +53,14 @@ export class User extends AuditEntity {
 
   @Column({ nullable: true })
   timezone: string;
+  @Column({ nullable: true })
+  birthDate: Date;
+  @Column({ nullable: true })
+  isVerified: boolean;
+
+  @Column({ type: 'enum', default: UserStatus.ACTIVE, enum: UserStatus })
+  status: UserStatus;
+
+  @Column({ nullable: true })
+  avatar: string;
 }
