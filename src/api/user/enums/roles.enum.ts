@@ -1,9 +1,8 @@
 // examples
 export enum UserRoles {
-  SUPER_ADMIN = 1,
-  ADMIN = 2,
-  USER = 3,
-  CUSTOMER = 4,
+  ADMIN = 1,
+  MANAGER = 2,
+  DEVELOPER = 3,
 }
 
 export enum RolePermissions {

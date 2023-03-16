@@ -9,7 +9,7 @@ import { UserStatus } from '../enums/userStatus.enum';
 export class User extends AuditEntity {
   @Column({
     type: 'enum',
-    default: UserRoles.USER,
+    default: UserRoles.ADMIN,
     enum: UserRoles,
   })
   role: UserRoles;

@@ -13,9 +13,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { IUserController } from './interfaces/user.controller.interface';
-import { PermissionsGuard } from '../../common/guards/permissions.guard';
-import { Permission } from '../../common/decorators/permissions.decorator';
-import { UserPermissions } from './enums/permissions.enum';
 import { GetCurrentUser } from '../../common/decorators/get-current-user.decorator';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -28,12 +25,14 @@ import { UserRoles } from './enums/roles.enum';
 import { PaginationInterceptor } from '../../common/interceptors/pagination.interceptor';
 import { ForgotPasswordDto, ResetPasswordDto } from './dtos/password-reset.dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('user')
 @ApiBearerAuth()
 @ApiTags('User')
 @UsePipes(new ValidationPipe())
-@UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(RolesGuard)
+//@UseInterceptors(ClassSerializerInterceptor)
 // @UseGuards(PermissionsGuard)
 export class UserController implements IUserController {
   constructor(private readonly usersService: UserService) {}
