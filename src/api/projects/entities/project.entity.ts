@@ -3,7 +3,7 @@ import { AuditEntity } from "src/common/db/customBaseEntites/AuditEntity";
 import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { Type } from "../enums/type.enum";
 
-@Entity('projects')
+@Entity('project')
 export class Project extends AuditEntity{
     
     @Column({nullable: true })

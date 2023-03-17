@@ -17,7 +17,7 @@ export const config = {
   entities: [User,PasswordReset,Project,Role],
   migrations: [process.env.TYPEORM_MIGRATIONS],
   logging: process.env.NODE_ENV === 'localhost',
-  seeds: process.env.TYPEORM_SEEDING_SEEDS,
+  seeds: [User,Role],
 };
 
 export const configNoEntities = {
@@ -31,5 +31,5 @@ export const configNoEntities = {
   database: process.env.TYPEORM_NAME,
   migrations: [process.env.TYPEORM_MIGRATIONS],
   logging: process.env.NODE_ENV === 'localhost',
-  seeds: process.env.TYPEORM_SEEDING_SEEDS,
+  seeds:[User,Role],
 };

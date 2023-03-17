@@ -26,6 +26,6 @@ export class UpdateProjectDto {
   @IsEnum(Type)
   @IsOptional()
   @ApiProperty()
-  gender: Type;
+  type: Type;
 
 }

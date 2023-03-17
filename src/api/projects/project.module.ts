@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { CustomRepositoryModule } from '../../common/db/CustomRepository.module';
-import { ProjectRepository } from './repository/project.repository'; 
-
-
+import { ProjectController } from './project.controller';
+import { ProjectService } from './project.service';
+import { ProjectRepository } from './repository/project.repository';
+import { CustomRepositoryModule } from 'src/common/db/CustomRepository.module';
 
 @Module({
-  imports: [
-    CustomRepositoryModule.forCustomRepository([ProjectRepository]),
-  ],
+  imports: [CustomRepositoryModule.forCustomRepository([ProjectRepository])],
+  providers: [ProjectService],
+  controllers: [ProjectController],
 })
 export class ProjectModule {}
