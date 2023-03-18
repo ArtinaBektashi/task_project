@@ -1,4 +1,5 @@
-import { UnprocessableEntityException } from '@nestjs/common';
+import { HttpException, UnprocessableEntityException } from '@nestjs/common';
+import { User } from 'src/api/user/entities/user.entity';
 import { BaseCustomRepository } from '../../../common/db/customBaseRepository/BaseCustomRepository';
 import { CustomRepository } from '../../../common/db/decorators/CustomRepository.decorator';
 import { CreateProjectDto } from '../dtos/create-project.dto';
@@ -31,15 +32,35 @@ export class ProjectRepository
         return project;
   }
 
+  async updateProject(id:string, data: UpdateProjectDto) :Promise<Project>{
 
-  async updateProject(id:string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
-    const project = await this.findOneBy({uuid : id})
-    if (!project) {
-        throw new UnprocessableEntityException('This project does not exist!');
+    const project = this.getProjectById(id);
+
+    if(!project){
+        throw new HttpException('Project does not exist',404);
     }
-    await this.update(project.uuid, updateProjectDto);
-    return this.getProjectById(id);
+    await this.update({uuid:id},data)
+    const updated = this.getProjectById(id);
+
+    return updated;
   }
+
+  async addUserToProject(projectId:string, userId: string) :Promise<void>{
+    const project = await this.getProjectById(projectId)
+    const user = await this.manager.findOne(User, { where :{uuid: userId}})
+
+    project.users.push(user);
+    await this.save(project);
+  }
+
+//   async updateProject(
+//     projectId: string,
+//     updateProjectDto: UpdateProjectDto,
+//   ): Promise<Project> {
+//     const project = await this.findOneBy({ uuid: projectId });
+//     await this.update(project.id, updateProjectDto);
+//     return await this.findOneBy({ uuid: projectId });
+//   }
 
   async removeProject(projectId: string): Promise<void> {
     const project = await this.findOneBy({uuid:projectId})

@@ -24,11 +24,14 @@ export class ProjectService {
     return await this.projectRepository.getProjectById(projectId)
   }
 
-  async updateProject(projectId: string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
-    return await this.projectRepository.updateProject(projectId,updateProjectDto)
+  async updateProject(uuid: string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
+    return await this.projectRepository.updateProject(uuid,updateProjectDto)
   }
 
   async removeProject(projectId:string) : Promise<void>{
     return await this.projectRepository.removeProject(projectId);
+  }
+  async addUserToProject(projectId:string, userId: string) :Promise<void>{
+    return await this.projectRepository.addUserToProject(projectId,userId)
   }
 }

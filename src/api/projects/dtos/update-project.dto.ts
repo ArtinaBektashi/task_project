@@ -13,7 +13,6 @@ import { Type } from '../enums/type.enum';
 export class UpdateProjectDto {
   @IsString()
   @IsOptional()
-  @Validate(IsUnique, [Project])
   @ApiProperty()
   url: string;
 

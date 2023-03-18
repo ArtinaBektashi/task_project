@@ -7,13 +7,9 @@ import {
     Delete,
     UseGuards,
     Put,
-    UseInterceptors,
   } from '@nestjs/common';
-  import { Roles } from '../../common/decorators/roles.decorator';
   import { RolesGuard } from '../../common/guards/roles.guard';
-  import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-  import { PaginationInterceptor } from '../../common/interceptors/pagination.interceptor';
-  import { UserRoles } from '../user/enums/roles.enum';
+  import { ApiTags } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { Project } from './entities/project.entity';
@@ -47,16 +43,22 @@ export class ProjectController {
       return await this.projectService.getProjectById(id);
     }
 
-    // @Public()
-    // @Put(':id')
-    // async updateProject(@Param('id') id:string , @Body() data:UpdateProjectDto) :Promise<Project>{
-    //   return await this.projectService.updateProject(id,data);
-    // }
+    @Public()
+    @Put(':id')
+    async updateProject(@Param('id') id:string , @Body() data:UpdateProjectDto) :Promise<Project>{
+      return await this.projectService.updateProject(id,data);
+    }
 
     @Public()
     @Delete(':id')
     async removeProject(@Param('id') id:string) : Promise<void>{
       return await this.projectService.removeProject(id);
+    }
+
+    @Public()
+    @Post(':id/users/:userId')
+    async addUserToProject(@Param('id') projectId: string, @Param('userId') userId: string): Promise<void> {
+    return await this.projectService.addUserToProject(projectId, userId);
     }
 
     // @Roles(UserRoles.ADMIN)
