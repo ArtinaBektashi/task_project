@@ -10,21 +10,21 @@ import { Project } from '../entities/project.entity';
 import { Type } from '../enums/type.enum';
 
 
-export class UpdateProjectDto {
+export class UpdateProjectDto implements Partial<Project> {
   @IsString()
   @IsOptional()
   @ApiProperty()
-  url: string;
+  url?: string;
 
   @IsString()
   @IsOptional()
   @ApiProperty()
-  name: string;
+  name?: string;
 
 
   @IsEnum(Type)
   @IsOptional()
   @ApiProperty()
-  type: Type;
+  type?: Type;
 
 }

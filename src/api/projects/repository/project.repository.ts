@@ -49,18 +49,10 @@ export class ProjectRepository
     const project = await this.getProjectById(projectId)
     const user = await this.manager.findOne(User, { where :{uuid: userId}})
 
-    project.users.push(user);
+    project.users = [user]
     await this.save(project);
   }
 
-//   async updateProject(
-//     projectId: string,
-//     updateProjectDto: UpdateProjectDto,
-//   ): Promise<Project> {
-//     const project = await this.findOneBy({ uuid: projectId });
-//     await this.update(project.id, updateProjectDto);
-//     return await this.findOneBy({ uuid: projectId });
-//   }
 
   async removeProject(projectId: string): Promise<void> {
     const project = await this.findOneBy({uuid:projectId})

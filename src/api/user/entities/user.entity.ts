@@ -5,6 +5,7 @@ import { UserRoles } from '../enums/roles.enum';
 import { AuditEntity } from '../../../common/db/customBaseEntites/AuditEntity';
 import { UserStatus } from '../enums/userStatus.enum';
 import { Report } from 'src/api/reports/entities/report.entity';
+import { Project } from 'src/api/projects/entities/project.entity';
 
 @Entity('users')
 export class User extends AuditEntity {
