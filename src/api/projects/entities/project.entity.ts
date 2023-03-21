@@ -1,7 +1,8 @@
 import { Report } from "src/api/reports/entities/report.entity";
+import { Task } from "src/api/task/entities/task.entity";
 import { User } from "src/api/user/entities/user.entity";
 import { AuditEntity } from "src/common/db/customBaseEntites/AuditEntity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { Type } from "../enums/type.enum";
 
 @Entity('project')
@@ -24,6 +25,9 @@ export class Project extends AuditEntity{
     @JoinTable()
     users : User[]
 
-    @ManyToOne(() => Report, (report) => report.project)
-    reports : Report
+    @OneToMany(() => Report, (report) => report.project)
+    reports: Report[];
+
+    @OneToMany(() => Task, (task) => task.project)
+    tasks : Task[]
 }

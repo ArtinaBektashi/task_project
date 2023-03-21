@@ -11,8 +11,8 @@ import { UserService } from "../user/user.service";
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly projectRepository: ProjectRepository){}
-    // private readonly userService: UserService,) {}
+  constructor(private readonly projectRepository: ProjectRepository,
+    private readonly userService: UserService,) {}
 
   async getProject(): Promise<Project[]> {
     return await this.projectRepository.getProject();
@@ -34,18 +34,18 @@ export class ProjectService {
     return await this.projectRepository.removeProject(projectId);
   }
 
-  // async addUserToProject(  projectId: string,
-  //   userId: string[],
-  // ): Promise<Project> {
-  //   const project = await this.projectRepository.findOne({
-  //     where: {
-  //       uuid: projectId,
-  //     },
-  //     relations: ['users'],
-  //   });
-  //   const users = await this.userService.findUsersByIds(userId);
-  //   project.users = [...project.users, ...users];
-  //   await this.projectRepository.save(project);
-  //   return project;
-  // }
+  async addUserToProject(  projectId: string,
+    userId: string[],
+  ): Promise<Project> {
+    const project = await this.projectRepository.findOne({
+      where: {
+        uuid: projectId,
+      },
+      relations: ['users'],
+    });
+    const users = await this.userService.findUsersByIds(userId);
+    project.users = [...project.users, ...users];
+    await this.projectRepository.save(project);
+    return project;
+  }
 }
