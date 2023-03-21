@@ -1,10 +1,12 @@
 import { UnprocessableEntityException } from "@nestjs/common";
+import { plainToClass } from "class-transformer";
 import { BaseCustomRepository } from "src/common/db/customBaseRepository/BaseCustomRepository";
+import { CustomRepository } from "src/common/db/decorators/CustomRepository.decorator";
 import { CreateTaskDto, UpdateTaskDto } from "../dtos/task.dto";
 import { Task } from "../entities/task.entity";
 import { ITaskRepository } from "../interfaces/task.interface";
 
-
+@CustomRepository(Task)
 export class TaskRepository extends BaseCustomRepository<Task> implements ITaskRepository{
     
     async getTasks():Promise<Task[]>{
@@ -35,5 +37,10 @@ export class TaskRepository extends BaseCustomRepository<Task> implements ITaskR
         const updated = this.getTasksById(taskId);
 
         return updated;
+    }
+
+    async removeTask(taskId: string): Promise<void> {
+        const task = await this.findOneBy({uuid:taskId})
+        await this.delete(task.id);
     }
 }

@@ -21,9 +21,9 @@ export class CreateTaskDto{
     @ApiProperty()
     status : Status
 
-    @IsDate()
+  
     @ApiProperty()
-    deadline : Date
+    deadline : string
 }
 
 export class UpdateTaskDto{
@@ -48,8 +48,8 @@ export class UpdateTaskDto{
     @ApiProperty()
     status : Status
 
-    @IsDate()
+
     @IsOptional()
     @ApiProperty()
-    deadline : Date
+    deadline : string
 }

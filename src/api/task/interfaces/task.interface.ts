@@ -12,4 +12,6 @@ export interface ITaskRepository extends IBaseCustomRepository<Task>{
     getTasksById(taskId: string ):Promise<Task>
 
     updateTask(taskId:string , data:UpdateTaskDto): Promise<Task>
+
+    removeTask(taskId:string) :Promise<void>
 }
