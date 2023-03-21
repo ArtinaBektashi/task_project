@@ -55,34 +55,12 @@ export class ProjectController {
       return await this.projectService.removeProject(id);
     }
 
-    @Public()
-    @Post(':id/users/:userId')
-    async addUserToProject(@Param('id') projectId: string, @Param('userId') userId: string): Promise<void> {
-    return await this.projectService.addUserToProject(projectId, userId);
-    }
-
-    // @Roles(UserRoles.ADMIN)
-    // @UseInterceptors(PaginationInterceptor)
-    // @Get()
-    // async findAll(){
-    //     return await this.projectService.findAll();
-    // }
-
-    // @Roles(UserRoles.ADMIN)
-    // @Get(':projectId')
-    // async findOne(@Param('projectId') projectId:string): Promise<Project>{
-    //     return await this.projectService.findOne(projectId)
-    // }
-
-    // @Roles(UserRoles.ADMIN)
-    // @Put(':projectId')
-    // async update(@Param('projectId') projectId : string, @Body() data : UpdateProjectDto){
-    //     return this.projectService.update(projectId,data)
-    // }
-
-    // @Roles(UserRoles.ADMIN)
-    // @Delete(':projectId')
-    // async remove(@Param('projectId') projectId: string){
-    //     return await this.projectService.remove(projectId)
+    // @Public()
+    // @Post(':projectId')
+    // addUserToProject(
+    //   @Param('projectId') projectId: string,
+    //   @Body('userIds') userIds: string[],
+    // ): Promise<Project> {
+    //   return this.projectService.addUserToProject(projectId,userIds);
     // }
 }

@@ -10,8 +10,4 @@ export interface IReportRepository extends IBaseCustomRepository<Report>{
     createReport(data : CreateReportDto) : Promise<Report>
 
     getReportById(id:string) : Promise<Report>
-
-    updateReport(id:string , data : UpdateReportDto) : Promise<Report>
-
-    deleteReport(id:string) : Promise<void>
 }

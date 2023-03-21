@@ -52,6 +52,12 @@ export class ProjectRepository
     project.users = [user]
     await this.save(project);
   }
+    //   // if project.users is not iterable, create a new array to hold users
+    //   project.users = [user]
+    // } else {
+    //   project.users.push(user)
+    // }
+  
 
 
   async removeProject(projectId: string): Promise<void> {

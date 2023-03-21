@@ -1,7 +1,7 @@
 import { Project } from "src/api/projects/entities/project.entity";
 import { User } from "src/api/user/entities/user.entity";
 import { AuditEntity } from "src/common/db/customBaseEntites/AuditEntity";
-import { Column, Entity, JoinTable, OneToMany } from "typeorm";
+import { Column, Entity, JoinTable, ManyToOne, OneToMany } from "typeorm";
 import { FileType } from "../enums/filetype.enum";
 
 
@@ -19,11 +19,10 @@ export class Report extends AuditEntity{
         enum : FileType
     })
     filetype:FileType
-
-    @OneToMany(() => User, (user) => user.reports)
-    user : User
-
-    @OneToMany(() => Project, (project) => project.reports)
-    project: Project
     
+    @ManyToOne(() => User, (user) => user.reports)
+    user: User;
+
+    @ManyToOne(() => Project, (project) => project.reports)
+    project: Project;
 }

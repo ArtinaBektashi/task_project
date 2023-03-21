@@ -6,11 +6,13 @@ import { UpdateProjectDto } from "./dtos/update-project.dto";
 // import { CreateProjectDto } from "./dtos/create-project.dto";
 import { Project } from "./entities/project.entity";
 import { ProjectRepository } from "./repository/project.repository";
+import { UserService } from "../user/user.service";
 
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly projectRepository: ProjectRepository) {}
+  constructor(private readonly projectRepository: ProjectRepository){}
+    // private readonly userService: UserService,) {}
 
   async getProject(): Promise<Project[]> {
     return await this.projectRepository.getProject();
@@ -31,7 +33,19 @@ export class ProjectService {
   async removeProject(projectId:string) : Promise<void>{
     return await this.projectRepository.removeProject(projectId);
   }
-  async addUserToProject(projectId:string, userId: string) :Promise<void>{
-    return await this.projectRepository.addUserToProject(projectId,userId)
-  }
+
+  // async addUserToProject(  projectId: string,
+  //   userId: string[],
+  // ): Promise<Project> {
+  //   const project = await this.projectRepository.findOne({
+  //     where: {
+  //       uuid: projectId,
+  //     },
+  //     relations: ['users'],
+  //   });
+  //   const users = await this.userService.findUsersByIds(userId);
+  //   project.users = [...project.users, ...users];
+  //   await this.projectRepository.save(project);
+  //   return project;
+  // }
 }

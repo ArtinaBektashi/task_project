@@ -66,6 +66,9 @@ export class User extends AuditEntity {
   @Column({ nullable: true })
   avatar: string;
 
+  @ManyToMany(() => Project, (project) => project.users, { cascade: true })
+  projects: Project[];
+
   @ManyToOne(() => Report, (report) => report.user)
   reports: Report[]
 }

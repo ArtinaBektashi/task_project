@@ -12,7 +12,7 @@ import { hashDataBrypt } from '../../services/providers';
 import { randomBytes } from 'crypto';
 import { UserRepository } from './repository/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectEventEmitter } from 'nest-emitter';
 import EventEmitter from 'events';
 
@@ -37,6 +37,17 @@ export class UserService implements IUserService {
       throw new UnprocessableEntityException('This user does not exist!');
     }
     return user;
+  }
+  
+  async findOneUser(uuid:string) :Promise<User>{
+    return await this.userRepository.findOneBy({uuid})
+  }
+
+  async findUsersByIds(userIds: string[]): Promise<User[]> {
+    const users = this.userRepository.find({
+      where: { uuid: In(userIds) },
+    });
+    return users;
   }
 
   async findAll(): Promise<User[]> {
