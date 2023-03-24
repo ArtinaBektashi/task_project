@@ -7,6 +7,7 @@ import {
     Delete,
     UseGuards,
     Put,
+    Res,
   } from '@nestjs/common';
   import { RolesGuard } from '../../common/guards/roles.guard';
   import { ApiTags } from '@nestjs/swagger';
@@ -14,6 +15,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { ReportService } from './report.service';
 import { Report } from './entities/report.entity';
 import { CreateReportDto } from './dtos/report.dto';
+import { Response } from 'express';
 
 @UseGuards(new RolesGuard())
 @ApiTags('report')
@@ -70,4 +72,12 @@ export class ReportController {
       return await this.reportService.findByUserId(userId);
     }
 
+    @Public()
+    @Get(':id/download-pdf')
+  async downloadReportPdf(@Param('id') id: string, @Res() res: Response) {
+    const { fileName, stream } = await this.reportService.downloadReportPdf(id);
+    res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
+    res.setHeader('Content-type', 'application/pdf');
+    stream.pipe(res);
+  }
 }

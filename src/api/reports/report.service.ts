@@ -1,10 +1,13 @@
 import { Injectable } from "@nestjs/common/decorators";
+import { createReadStream } from "fs";
+import { Readable } from "stream";
+import { promisify } from "util";
 import { ProjectService } from "../projects/project.service";
-import { ProjectRepository } from "../projects/repository/project.repository";
 import { UserService } from "../user/user.service";
 import { CreateReportDto } from "./dtos/report.dto";
 import { Report } from "./entities/report.entity";
 import { ReportRepository } from "./repository/report.repository";
+import { create as createPDF } from 'html-pdf';
 
 
 @Injectable()
@@ -68,4 +71,30 @@ export class ReportService{
         .where('user.uuid = :userId', {userId})
         .getMany()
     }
+
+    async downloadReportPdf(id: string): Promise<{ fileName: string; stream: Readable }> {
+        const report = await this.getReportById(id);
+        const html = `
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>${report.name}</title>
+            </head>
+            <body>
+              <h1>${report.name}</h1>
+              <p>Report ID: ${report.uuid}</p>
+              <p>Report Project : ${report.project}</p>
+              <p>Report User : ${report.user}</p>
+              <p>Date of creation : ${report.created_at}</p>
+            </body>
+          </html>
+        `;
+        const options = {
+          format: 'Letter',
+        };
+        const pdf = await promisify(createPDF)(html, options);
+        const fileName = `${report.name}.pdf`;
+        const stream = createReadStream(pdf.filename);
+        return { fileName, stream };
+      }
 }
