@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { InjectEventEmitter } from 'nest-emitter';
 import EventEmitter from 'events';
+import axios from 'axios';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -26,9 +27,25 @@ export class UserService implements IUserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const avatar = await this.generateImage(50, 50);
+    const data = {...createUserDto,avatar}
     return await this.userRepository.save(
-      this.userRepository.create(createUserDto),
+      this.userRepository.create(data),
     );
+  }
+
+  async generateImage(width, height) {
+    const url = 'https://random.imagecdn.app/' + width + '/' + height;
+  
+    
+    try {
+      const response = await axios(url, { responseType: 'arraybuffer' });
+      const result = Buffer.from(response.data, 'binary').toString('base64');
+      return result;
+    } catch (err) {
+      throw err;
+    }
+
   }
 
   async findOne(userId: string): Promise<User> {
@@ -39,10 +56,6 @@ export class UserService implements IUserService {
     return user;
   }
   
-  async findOneUser(uuid:string) :Promise<User>{
-    return await this.userRepository.findOneBy({uuid})
-  }
-
   async findUsersByIds(userIds: string[]): Promise<User[]> {
     const users = this.userRepository.find({
       where: { uuid: In(userIds) },
