@@ -13,6 +13,7 @@ export class ReportService{
         private readonly projectService: ProjectService,
         private readonly userService : UserService) {}
 
+
     async getReport() :Promise<Report[]>{
         return await this.reportRepository.getReport();
     }
@@ -53,4 +54,18 @@ export class ReportService{
     
         return report;
       }
+    
+      async findByProjectId(projectId: string): Promise<Report[]> {
+        return await this.reportRepository.createQueryBuilder('report')
+        .leftJoinAndSelect('report.project', 'project')
+        .where('project.uuid = :projectId', { projectId })
+        .getMany();
+    }
+
+    async findByUserId(userId: string) : Promise<Report[]>{
+        return await this.reportRepository.createQueryBuilder('report')
+        .leftJoinAndSelect('report.user','user')
+        .where('user.uuid = :userId', {userId})
+        .getMany()
+    }
 }

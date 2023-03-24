@@ -58,4 +58,16 @@ export class ReportController {
       return this.reportService.assignUserToReport(reportId, userId);
     }
 
+    @Public()
+    @Get('project/:projectId')
+    async findByProjectId(@Param('projectId') projectId: string): Promise<Report[]> {
+    return await this.reportService.findByProjectId(projectId);
+  }
+
+    @Public()
+    @Get('user/:userId')
+    async findByUserId(@Param('userId') userId : string) : Promise<Report[]>{
+      return await this.reportService.findByUserId(userId);
+    }
+
 }
