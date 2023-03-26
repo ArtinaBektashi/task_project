@@ -48,6 +48,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "exceljs": "^4.3.0",
     "express-basic-auth": "^1.2.1",
     "handlebars": "^4.7.7",
     "html-pdf": "^3.0.1",

@@ -21,9 +21,9 @@ export class Project extends AuditEntity{
       })
       type : Type
 
-    @ManyToMany(() => User)
-    @JoinTable()
-    users : User[]
+      @ManyToMany(() => User)
+      @JoinTable()
+      users: User[];
 
     @OneToMany(() => Report, (report) => report.project)
     reports: Report[];

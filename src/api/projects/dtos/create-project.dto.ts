@@ -5,13 +5,14 @@ import { Type } from "../enums/type.enum";
 export class CreateProjectDto{
     @IsString()
     @ApiProperty()
-    url:string;
-
+    url: string;
+  
     @IsString()
     @ApiProperty()
-    name:string
-
+    name: string;
+  
     @IsEnum(Type)
     @ApiProperty()
-    type : Type
-}
+    type: Type;
+
+  }

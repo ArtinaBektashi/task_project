@@ -25,4 +25,6 @@ export class Report extends AuditEntity{
 
     @ManyToOne(() => Project, (project) => project.reports)
     project: Project;
+
+    
 }

@@ -43,21 +43,15 @@ export class ReportController {
     }
 
     @Public()
-    @Post('/add/:reportId/:projectId')
-    assignProjectToReport(
-    @Param('reportId') reportId: string,
-    @Param('projectId') projectId: string,
-    ) {
-    return this.reportService.assignProjectToReport(reportId, projectId);
+    @Post('/addProjectToReport')
+    async assignProjectToReport(@Body() data: { reportId: string, projectId: string }) {
+      return this.reportService.assignProjectToReport(data);
     }
 
     @Public()
-    @Post('/:reportId/:userId')
-    assignUserToReport(
-      @Param('reportId') reportId: string,
-      @Param('userId') userId: string,
-    ) {
-      return this.reportService.assignUserToReport(reportId, userId);
+    @Post('/addUserToReport')
+    async assignUserToReport(@Body() data: {reportId: string, userId: string}): Promise<Report> {
+      return this.reportService.assignUserToReport(data);
     }
 
     @Public()

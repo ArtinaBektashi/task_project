@@ -34,7 +34,8 @@ export class ProjectService {
     return await this.projectRepository.removeProject(projectId);
   }
 
-  async addUserToProject(  projectId: string,
+  async assignUsersToProject(
+    projectId: string,
     userId: string[],
   ): Promise<Project> {
     const project = await this.projectRepository.findOne({
@@ -43,9 +44,12 @@ export class ProjectService {
       },
       relations: ['users'],
     });
+    if (!userId || userId.length === 0) {
+      return project;
+    }
     const users = await this.userService.findUsersByIds(userId);
     project.users = [...project.users, ...users];
-    await this.projectRepository.save(project);
+    await this.projectRepository.createProject(project);
     return project;
   }
 }

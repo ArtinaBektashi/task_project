@@ -13,7 +13,6 @@ export class CreateRoleDto {
 }
 
 export class UpdateRoleDto {
-  @IsNotEmpty()
   @ApiProperty()
   name: string;
 

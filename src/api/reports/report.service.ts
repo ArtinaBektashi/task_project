@@ -8,6 +8,7 @@ import { CreateReportDto } from "./dtos/report.dto";
 import { Report } from "./entities/report.entity";
 import { ReportRepository } from "./repository/report.repository";
 import { create as createPDF } from 'html-pdf';
+import * as ExcelJS from 'exceljs'
 
 
 @Injectable()
@@ -30,7 +31,8 @@ export class ReportService{
         return await this.reportRepository.createReport(data);
       }
 
-      async assignProjectToReport(reportId: string, projectId: string) {
+      async assignProjectToReport(data: { reportId: string, projectId: string }) {
+        const { reportId, projectId } = data;
         const project = await this.projectService.getProjectById(projectId);
         const report = await this.reportRepository.findOne({
           where: {
@@ -43,7 +45,8 @@ export class ReportService{
         return report;
       }
 
-      async assignUserToReport(reportId: string, userId: string): Promise<Report> {
+      async assignUserToReport(data: {reportId: string, userId: string}): Promise<Report> {
+        const { reportId, userId } = data;
         const user = await this.userService.findOne(userId);
         const report = await this.reportRepository.findOne({
           where: {
@@ -97,4 +100,5 @@ export class ReportService{
         const stream = createReadStream(pdf.filename);
         return { fileName, stream };
       }
+
 }

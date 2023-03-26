@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { User } from './entities/user.entity';
 import { IUserService } from './interfaces/user.service.interface';
 import { PermissinDto } from './dtos/permission.dto';
-import { UnprocessableEntityException } from '@nestjs/common/exceptions';
+import { NotFoundException, UnprocessableEntityException } from '@nestjs/common/exceptions';
 import { ForgotPasswordDto, ResetPasswordDto } from './dtos/password-reset.dto';
 import { PasswordReset } from './entities/reset-password.entity';
 import { hashDataBrypt } from '../../services/providers';
@@ -60,6 +60,7 @@ export class UserService implements IUserService {
     const users = this.userRepository.find({
       where: { uuid: In(userIds) },
     });
+    if (!users) throw new NotFoundException();
     return users;
   }
 

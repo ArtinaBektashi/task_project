@@ -27,6 +27,6 @@ export class ReportRepository extends BaseCustomRepository<Report>
         }
         return report;
     }
-   
+    
 }
 

@@ -43,4 +43,6 @@ export class TaskRepository extends BaseCustomRepository<Task> implements ITaskR
         const task = await this.findOneBy({uuid:taskId})
         await this.delete(task.id);
     }
+
+    
 }
