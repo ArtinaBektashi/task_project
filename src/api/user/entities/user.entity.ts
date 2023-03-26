@@ -7,6 +7,7 @@ import { UserStatus } from '../enums/userStatus.enum';
 import { Report } from 'src/api/reports/entities/report.entity';
 import { Project } from 'src/api/projects/entities/project.entity';
 import { Task } from 'src/api/task/entities/task.entity';
+import { Media } from 'src/api/media/entities/media.entity';
 
 @Entity('users')
 export class User extends AuditEntity {
@@ -76,4 +77,7 @@ export class User extends AuditEntity {
   @ManyToMany(() => Project)
   @JoinTable()
   projects: Project[];
+
+  @OneToMany(() => Media, (media) => media.user)
+  medias: Media[]
 }
