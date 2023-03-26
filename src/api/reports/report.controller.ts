@@ -74,4 +74,13 @@ export class ReportController {
     res.setHeader('Content-type', 'application/pdf');
     stream.pipe(res);
   }
+
+  @Public()
+  @Get(':id/download/excel')
+  async downloadExcel(@Param('id') id: string, @Res() res: Response) {
+    const { fileName, stream } = await this.reportService.downloadReportExcel(id);
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    stream.pipe(res);
+  }
 }

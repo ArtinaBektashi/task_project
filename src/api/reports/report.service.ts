@@ -101,4 +101,31 @@ export class ReportService{
         return { fileName, stream };
       }
 
+      async downloadReportExcel(id: string): Promise<{ fileName: string; stream: Readable }> {
+        const report = await this.getReportById(id);
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Report');
+    
+        worksheet.columns = [
+          { header: 'Name', key: 'name', width: 20 },
+          { header: 'ID', key: 'id', width: 10 },
+          { header: 'Project', key: 'project', width: 20 },
+          { header: 'Date of Creation', key: 'createdAt', width: 20 },
+        ];
+    
+        worksheet.addRow({
+          name: report.name,
+          id: report.uuid,
+          project: report.project ? report.project.name : '',
+          createdAt: report.created_at,
+        });
+    
+        const buffer = await workbook.xlsx.writeBuffer();
+        const fileName = `${report.name}.xlsx`;
+        const stream = new Readable();
+        stream.push(buffer);
+        stream.push(null);
+    
+        return { fileName, stream };
+      }
 }
