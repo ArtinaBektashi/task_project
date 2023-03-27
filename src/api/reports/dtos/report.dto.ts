@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
 import { FileType } from "../enums/filetype.enum";
 
 export class CreateReportDto{
@@ -16,22 +16,4 @@ export class CreateReportDto{
     @ApiProperty()
     filetype : FileType
 
-}
-
-export class UpdateReportDto{
-    
-    @IsString()
-    @IsOptional()
-    @ApiProperty()
-    name:string
-
-    @IsString()
-    @IsOptional()
-    @ApiProperty()
-    url:string
-
-    @IsEnum(FileType)
-    @IsOptional()
-    @ApiProperty()
-    filetype : FileType
 }

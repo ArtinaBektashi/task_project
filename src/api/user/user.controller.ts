@@ -37,8 +37,6 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 export class UserController implements IUserController {
   constructor(private readonly usersService: UserService) {}
 
-  //example how permissions work
-  // @Permission(UserPermissions.CAN_ACCESS_HELLO_METHOD)
   @Public()
   @Get('hello')
   async getHello() {
@@ -56,7 +54,6 @@ export class UserController implements IUserController {
     return await this.usersService.findOne(user.uuid);
   }
 
-  // example how roles work
   @Roles(UserRoles.ADMIN)
   @Get(':userId')
   async findOne(@Param('userId') userId: string): Promise<User> {

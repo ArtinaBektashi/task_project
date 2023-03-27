@@ -13,8 +13,8 @@ export class Task extends AuditEntity{
     @Column({nullable: true })
     description:string
 
-    @Column({})
-    deadline : string
+    @Column({nullable:true})
+    deadline : Date
 
     @Column({
         type: 'enum',

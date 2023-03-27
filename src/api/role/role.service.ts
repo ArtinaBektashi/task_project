@@ -50,7 +50,6 @@ export class RoleService {
       relations: ['users'],
     });
   }
-  
 
   async remove(id: string) {
     await this.getRequestedRoleOrFail(id);

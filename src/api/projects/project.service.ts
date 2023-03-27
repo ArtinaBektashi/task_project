@@ -1,12 +1,10 @@
-import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
-// import { Repository } from "typeorm";
-// import { CreateProjectDto } from "./dtos/create-project.dto";
 import { Project } from "./entities/project.entity";
 import { ProjectRepository } from "./repository/project.repository";
 import { UserService } from "../user/user.service";
+import { QueryFailedError } from "typeorm";
 
 
 @Injectable()
@@ -15,39 +13,88 @@ export class ProjectService {
     private readonly userService: UserService,) {}
 
   async getProject(): Promise<Project[]> {
-    return await this.projectRepository.getProject();
+    try {
+      const projects = await this.projectRepository.getProject();
+      if (!projects || projects.length === 0) {
+        throw new NotFoundException('No projects found');
+      }
+      return projects;
+    } catch (error) {
+      throw new HttpException(error.message,HttpStatus.NOT_FOUND);
+    }
   }
 
   async createProject(createProjectDto : CreateProjectDto): Promise<Project>{
-    return await this.projectRepository.createProject(createProjectDto);
+    try {
+      const projectExists = await this.projectRepository.findOneBy({ name: createProjectDto.name });
+      if (projectExists) {
+        throw new ConflictException(`A project with name ${createProjectDto.name} already exists`);
+      }
+      const newProject = this.projectRepository.create(createProjectDto);
+      return await this.projectRepository.save(newProject);
+    } catch (error) {
+      throw new HttpException(error.message,HttpStatus.CONFLICT);
+    }
   }
 
   async getProjectById(projectId: string) :Promise<Project>{
-    return await this.projectRepository.getProjectById(projectId)
+    try {
+      const project = await this.projectRepository.getProjectById(projectId);
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+      return project;
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        throw new NotFoundException('Project not found');
+      }
+      throw error;
+    }
   }
 
   async updateProject(uuid: string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
-    return await this.projectRepository.updateProject(uuid,updateProjectDto)
+    const project = await this.getProjectById(uuid);
+
+      if (!project) {
+        throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+      }
+
+    return await this.projectRepository.updateProject(uuid, updateProjectDto);
   }
+
 
   async removeProject(projectId:string) : Promise<void>{
-    return await this.projectRepository.removeProject(projectId);
+     const project = await this.getProjectById(projectId);
+
+      if(!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      await this.projectRepository.removeProject(projectId);
   }
 
-  async assignUsersToProject(
-    projectId: string,
-    userId: string[],
-  ): Promise<Project> {
+  async assignUsersToProject(projectId: string, userId: string[],) : Promise<Project> {
     const project = await this.projectRepository.findOne({
       where: {
         uuid: projectId,
       },
       relations: ['users'],
     });
-    if (!userId || userId.length === 0) {
-      return project;
-    }
+
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      if (!userId || userId.length === 0) {
+        return project;
+      }
+
     const users = await this.userService.findUsersByIds(userId);
+
+      if (users.length === 0) {
+        throw new NotFoundException('User(s) not found');
+      }
+
     project.users = [...project.users, ...users];
     await this.projectRepository.createProject(project);
     return project;

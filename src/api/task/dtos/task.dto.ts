@@ -23,7 +23,7 @@ export class CreateTaskDto{
 
   
     @ApiProperty()
-    deadline : string
+    deadline : Date
 }
 
 export class UpdateTaskDto{
@@ -51,5 +51,5 @@ export class UpdateTaskDto{
 
     @IsOptional()
     @ApiProperty()
-    deadline : string
+    deadline : Date
 }

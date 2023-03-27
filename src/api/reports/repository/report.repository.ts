@@ -1,7 +1,7 @@
 import { UnprocessableEntityException } from "@nestjs/common";
 import { BaseCustomRepository } from "src/common/db/customBaseRepository/BaseCustomRepository";
 import { CustomRepository } from "src/common/db/decorators/CustomRepository.decorator";
-import { CreateReportDto, UpdateReportDto } from "../dtos/report.dto";
+import { CreateReportDto } from "../dtos/report.dto";
 import { Report } from "../entities/report.entity";
 import { IReportRepository } from "../interfaces/report.interface";
 

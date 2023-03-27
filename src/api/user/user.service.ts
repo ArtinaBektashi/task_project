@@ -36,15 +36,14 @@ export class UserService implements IUserService {
 
   async generateImage(width, height) {
     const url = 'https://random.imagecdn.app/' + width + '/' + height;
-  
     
-    try {
-      const response = await axios(url, { responseType: 'arraybuffer' });
-      const result = Buffer.from(response.data, 'binary').toString('base64');
-      return result;
-    } catch (err) {
-      throw err;
-    }
+      try {
+        const response = await axios(url, { responseType: 'arraybuffer' });
+        const result = Buffer.from(response.data, 'binary').toString('base64');
+        return result;
+      } catch (err) {
+        throw err;
+      }
 
   }
 
