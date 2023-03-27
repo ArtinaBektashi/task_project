@@ -46,14 +46,14 @@ export class TaskController {
     }
 
     @Public()
-    @Post('/add/:taskId/:userId')
-    async addTaskToUser(@Param('taskId') taskId:string, @Param('userId') userId:string){
-        return await this.taskService.addTaskToUser(taskId,userId)
+    @Post('/addTaskToUser')
+    async addTaskToUser(@Body() data: {taskId:string, userId:string}):Promise<Task>{
+        return await this.taskService.addTaskToUser(data)
     }
 
     @Public()
-    @Post(':taskId/:projectId')
-    async addTaskToProject(@Param('taskId') taskId:string, @Param('projectId') projectId:string){
-        return await this.taskService.addTaskToProject(taskId,projectId)
+    @Post('/addTaskToProject')
+    async addTaskToProject(@Body() data: {taskId:string, projectId:string}){
+        return await this.taskService.addTaskToProject(data)
     }
 }

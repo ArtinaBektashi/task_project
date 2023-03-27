@@ -75,7 +75,8 @@ export class TaskService {
     }
 
 
-     async addTaskToUser(taskId :string, userId: string) : Promise<Task>{
+     async addTaskToUser(data: {taskId :string, userId: string}) : Promise<Task>{
+        const { taskId , userId } = data;
         const user = await this.userService.findOne(userId);
 
             if(!user) {
@@ -100,7 +101,8 @@ export class TaskService {
      }
 
 
-    async addTaskToProject(taskId:string, projectId: string) :Promise<Task>{
+    async addTaskToProject(data: {taskId:string, projectId: string}) :Promise<Task>{
+        const {taskId, projectId} = data;
         const project= await this.projectService.getProjectById(projectId);
 
             if(!project) {
@@ -122,5 +124,5 @@ export class TaskService {
         await this.taskRepository.save(task);
         return task;
     }
-    
+
 }
