@@ -1,7 +1,7 @@
 import slugify from 'slugify';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 import { Role } from './entities/role.entity';
 import { HttpException, HttpStatus } from '@nestjs/common';

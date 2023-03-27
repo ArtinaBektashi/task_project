@@ -22,9 +22,6 @@ export class ReportRepository extends BaseCustomRepository<Report>
 
     async getReportById(id: string): Promise<Report> {
         const report = await this.findOneBy({uuid: id});
-        if(!report){
-            throw new UnprocessableEntityException('This report does not exist!');
-        }
         return report;
     }
     

@@ -1,5 +1,3 @@
-import { HttpException, UnprocessableEntityException } from '@nestjs/common';
-import { validate } from 'class-validator';
 import { User } from 'src/api/user/entities/user.entity';
 import { BaseCustomRepository } from '../../../common/db/customBaseRepository/BaseCustomRepository';
 import { CustomRepository } from '../../../common/db/decorators/CustomRepository.decorator';

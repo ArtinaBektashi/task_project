@@ -13,29 +13,23 @@ export class ProjectService {
     private readonly userService: UserService,) {}
 
   async getProject(): Promise<Project[]> {
-    try {
       const projects = await this.projectRepository.getProject();
       if (!projects || projects.length === 0) {
         throw new NotFoundException('No projects found');
       }
       return projects;
-    } catch (error) {
-      throw new HttpException(error.message,HttpStatus.NOT_FOUND);
-    }
   }
 
   async createProject(createProjectDto : CreateProjectDto): Promise<Project>{
-    try {
       const projectExists = await this.projectRepository.findOneBy({ name: createProjectDto.name });
-      if (projectExists) {
-        throw new ConflictException(`A project with name ${createProjectDto.name} already exists`);
-      }
-      const newProject = this.projectRepository.create(createProjectDto);
-      return await this.projectRepository.save(newProject);
-    } catch (error) {
-      throw new HttpException(error.message,HttpStatus.CONFLICT);
-    }
+
+        if (projectExists) {
+          throw new ConflictException(`A project with name ${createProjectDto.name} already exists`);
+        }
+
+      return await this.projectRepository.createProject(createProjectDto);
   }
+
 
   async getProjectById(projectId: string) :Promise<Project>{
     try {
@@ -52,11 +46,12 @@ export class ProjectService {
     }
   }
 
+
   async updateProject(uuid: string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
     const project = await this.getProjectById(uuid);
 
       if (!project) {
-        throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('Project not found');
       }
 
     return await this.projectRepository.updateProject(uuid, updateProjectDto);
@@ -73,6 +68,7 @@ export class ProjectService {
       await this.projectRepository.removeProject(projectId);
   }
 
+
   async assignUsersToProject(projectId: string, userId: string[],) : Promise<Project> {
     const project = await this.projectRepository.findOne({
       where: {
@@ -84,7 +80,6 @@ export class ProjectService {
       if (!project) {
         throw new NotFoundException('Project not found');
       }
-
       if (!userId || userId.length === 0) {
         return project;
       }

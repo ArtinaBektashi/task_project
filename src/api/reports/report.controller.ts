@@ -4,9 +4,7 @@ import {
     Post,
     Body,
     Param,
-    Delete,
     UseGuards,
-    Put,
     Res,
   } from '@nestjs/common';
   import { RolesGuard } from '../../common/guards/roles.guard';

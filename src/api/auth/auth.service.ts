@@ -49,10 +49,6 @@ export class AuthService implements IAuthService {
       await this.updateRtHash(user.uuid, tokens.refreshToken);
       return tokens;
     } catch (error) {
-      // throw new HttpException(
-      //   'User registration failed',
-      //   HttpStatus.BAD_REQUEST,
-      // );
       throw new InternalServerErrorException('User registration failed');
     }
   }

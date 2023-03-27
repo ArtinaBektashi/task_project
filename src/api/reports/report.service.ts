@@ -9,7 +9,7 @@ import { Report } from "./entities/report.entity";
 import { ReportRepository } from "./repository/report.repository";
 import { create as createPDF } from 'html-pdf';
 import * as ExcelJS from 'exceljs'
-import { ConflictException, HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
+import { ConflictException, NotFoundException } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 
 
@@ -21,17 +21,16 @@ export class ReportService{
 
 
         async getReport(): Promise<Report[]> {
-          try {
             const reports = await this.reportRepository.getReport();
-            if (!reports || reports.length === 0) {
-              throw new NotFoundException('No reports found');
-            }
+            
+              if (!reports || reports.length === 0) {
+                throw new NotFoundException('No reports found');
+              }
+
             return reports;
-          } catch (error) {
-            throw new HttpException(error.message, HttpStatus.NOT_FOUND);
-          }
         }
       
+
         async getReportById(reportId: string): Promise<Report> {
           try {
             const report = await this.reportRepository.getReportById(reportId);
@@ -48,21 +47,18 @@ export class ReportService{
         }
       
         async createReport(createReportDto: CreateReportDto): Promise<Report> {
-          try {
             const reportExists = await this.reportRepository.findOneBy({
               name: createReportDto.name,
             });
-            if (reportExists) {
-              throw new ConflictException(
-                `A report with name ${createReportDto.name} already exists`,
-              );
-            }
-            const newReport = this.reportRepository.create(createReportDto);
-            return await this.reportRepository.save(newReport);
-          } catch (error) {
-            throw new HttpException(error.message, HttpStatus.CONFLICT);
-          }
+              if (reportExists) {
+                throw new ConflictException(
+                  `A report with name ${createReportDto.name} already exists`,
+                );
+              }
+            return await this.reportRepository.createReport(createReportDto);
+
         }
+
 
         async assignProjectToReport(data: { reportId: string, projectId: string }) {
           const { reportId, projectId } = data;
@@ -111,10 +107,11 @@ export class ReportService{
 
           report.user = user;
           await this.reportRepository.save(report);
-          
+
           return report;
         }
     
+
         async findByProjectId(projectId: string): Promise<Report[]> {
           return await this.reportRepository.createQueryBuilder('report')
           .leftJoinAndSelect('report.project', 'project')
@@ -128,6 +125,7 @@ export class ReportService{
             .where('user.uuid = :userId', {userId})
             .getMany()
         }
+
 
         async downloadReportPdf(id: string): Promise<{ fileName: string; stream: Readable }> {
             const report = await this.getReportById(id);

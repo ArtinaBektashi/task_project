@@ -1,5 +1,4 @@
 import { UnprocessableEntityException } from "@nestjs/common";
-import { plainToClass } from "class-transformer";
 import { BaseCustomRepository } from "src/common/db/customBaseRepository/BaseCustomRepository";
 import { CustomRepository } from "src/common/db/decorators/CustomRepository.decorator";
 import { CreateTaskDto, UpdateTaskDto } from "../dtos/task.dto";
