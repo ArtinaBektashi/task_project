@@ -26,7 +26,7 @@ export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
 
-    @Roles(UserRoles.DEVELOPER)
+    @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get()
     async getReports():Promise<Report[]>{
@@ -34,7 +34,7 @@ export class ReportController {
     }
 
 
-    @Roles(UserRoles.DEVELOPER)
+    @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get('/search')
     async getReport(
@@ -57,7 +57,7 @@ export class ReportController {
       return await this.reportService.createReport(data);
     }
 
-    @Roles(UserRoles.DEVELOPER)
+    @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get(':id')
     async getReportById(@Param('id') id : string) : Promise<Report>{
@@ -78,21 +78,21 @@ export class ReportController {
       return this.reportService.assignUserToReport(data);
     }
 
-    @Roles(UserRoles.DEVELOPER)
+    @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get('project/:projectId')
     async findByProjectId(@Param('projectId') projectId: string): Promise<Report[]> {
     return await this.reportService.findByProjectId(projectId);
   }
 
-    @Roles(UserRoles.DEVELOPER)
+  @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get('user/:userId')
     async findByUserId(@Param('userId') userId : string) : Promise<Report[]>{
       return await this.reportService.findByUserId(userId);
     }
 
-    @Roles(UserRoles.DEVELOPER)
+    @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get(':id/download-pdf')
     async downloadReportPdf(@Param('id') id: string, @Res() res: Response) {
@@ -102,7 +102,7 @@ export class ReportController {
       stream.pipe(res);
   }
 
-    @Roles(UserRoles.DEVELOPER)
+  @Roles(UserRoles.DEVELOPER,UserRoles.ADMIN,UserRoles.MANAGER)
     @ApiProperty()
     @Get(':id/download/excel')
     async downloadExcel(@Param('id') id: string, @Res() res: Response) {

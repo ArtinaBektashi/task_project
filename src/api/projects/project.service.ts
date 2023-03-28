@@ -89,4 +89,19 @@ export class ProjectService {
     await this.projectRepository.createProject(project);
     return project;
   }
+
+  async searchProjects(searchTerm: string, options: { name?: string } = {}): Promise<Project[]> {
+    const { name } = options;
+    const projects = await this.projectRepository.createQueryBuilder('project')
+      .leftJoinAndSelect('project.users', 'user')
+      .where('project.name LIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
+      .andWhere(name ? 'project.name = :name' : '1=1', { name })
+      .getMany();
+  
+    if (!projects || projects.length === 0) {
+      throw new NotFoundException('No projects found');
+    }
+  
+    return projects;
+  }
 }

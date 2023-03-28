@@ -7,9 +7,11 @@ import {
     Delete,
     UseGuards,
     Put,
+    Query,
+    NotFoundException,
   } from '@nestjs/common';
   import { RolesGuard } from '../../common/guards/roles.guard';
-  import { ApiTags } from '@nestjs/swagger';
+  import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { Project } from './entities/project.entity';
@@ -24,11 +26,25 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   
-  @Roles(UserRoles.ADMIN || UserRoles.DEVELOPER || UserRoles.MANAGER)
-  @Get()
-  async getProject(): Promise<Project[]> {
-    return await this.projectService.getProject();
-  }
+    @Roles(UserRoles.ADMIN,UserRoles.DEVELOPER,UserRoles.MANAGER)
+    @Get()
+    async getProject(): Promise<Project[]> {
+      return await this.projectService.getProject();
+    }
+
+    @Roles(UserRoles.ADMIN,UserRoles.DEVELOPER,UserRoles.MANAGER)
+    @ApiProperty()
+    @Get('/search')
+    async searchProjects(
+      @Query('q') searchTerm: string,
+      @Query('name') name?: string,
+    ): Promise<Project[]> {
+      const projects = await this.projectService.searchProjects(searchTerm, { name });
+      if (!projects || projects.length === 0) {
+        throw new NotFoundException('No projects found');
+      }
+      return projects;
+    }
 
   
     @Roles(UserRoles.ADMIN, UserRoles.MANAGER)
