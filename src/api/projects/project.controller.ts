@@ -33,7 +33,6 @@ export class ProjectController {
     }
 
     @Roles(UserRoles.ADMIN,UserRoles.DEVELOPER,UserRoles.MANAGER)
-    @ApiProperty()
     @Get('/search')
     async searchProjects(
       @Query('q') searchTerm: string,
