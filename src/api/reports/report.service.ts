@@ -172,13 +172,6 @@ export class ReportService{
           return { fileName, stream };
         }
 
-        // async searchReports(searchTerm: string): Promise<Report[]> {
-        //   const queryBuilder = this.reportRepository.createQueryBuilder('report');
-        //   const reports = await queryBuilder.leftJoinAndSelect('report.user')
-        //     .where('report.name ILIKE :searchTerm OR report.url ILIKE :searchTerm',{searchTerm : `%${searchTerm}%`}).getMany();
-        //     return reports;
-        // }
-
         async searchReports(searchTerm: string, options: { name?: string, url?: string } = {}): Promise<Report[]> {
           const { name, url } = options;
           const reports = await this.reportRepository.createQueryBuilder('report')
