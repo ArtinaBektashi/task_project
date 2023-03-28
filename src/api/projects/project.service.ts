@@ -14,18 +14,18 @@ export class ProjectService {
 
   async getProject(): Promise<Project[]> {
       const projects = await this.projectRepository.getProject();
-      if (!projects || projects.length === 0) {
-        throw new NotFoundException('No projects found');
-      }
+
+        if (!projects || projects.length === 0) 
+          throw new NotFoundException('No projects found');
+
       return projects;
   }
 
   async createProject(createProjectDto : CreateProjectDto): Promise<Project>{
       const projectExists = await this.projectRepository.findOneBy({ name: createProjectDto.name });
 
-        if (projectExists) {
+        if (projectExists) 
           throw new ConflictException(`A project with name ${createProjectDto.name} already exists`);
-        }
 
       return await this.projectRepository.createProject(createProjectDto);
   }
@@ -50,9 +50,8 @@ export class ProjectService {
   async updateProject(uuid: string, updateProjectDto : UpdateProjectDto) : Promise<Project>{
     const project = await this.getProjectById(uuid);
 
-      if (!project) {
+      if (!project) 
         throw new NotFoundException('Project not found');
-      }
 
     return await this.projectRepository.updateProject(uuid, updateProjectDto);
   }
@@ -61,9 +60,8 @@ export class ProjectService {
   async removeProject(projectId:string) : Promise<void>{
      const project = await this.getProjectById(projectId);
 
-      if(!project) {
+      if(!project) 
         throw new NotFoundException('Project not found');
-      }
 
       await this.projectRepository.removeProject(projectId);
   }
@@ -77,18 +75,15 @@ export class ProjectService {
       relations: ['users'],
     });
 
-      if (!project) {
+      if (!project)
         throw new NotFoundException('Project not found');
-      }
-      if (!userId || userId.length === 0) {
+      if (!userId || userId.length === 0) 
         return project;
-      }
 
     const users = await this.userService.findUsersByIds(userId);
 
-      if (users.length === 0) {
+      if (users.length === 0) 
         throw new NotFoundException('User(s) not found');
-      }
 
     project.users = [...project.users, ...users];
     await this.projectRepository.createProject(project);

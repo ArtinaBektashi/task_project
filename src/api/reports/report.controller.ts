@@ -6,6 +6,8 @@ import {
     Param,
     UseGuards,
     Res,
+    Query,
+    NotFoundException,
   } from '@nestjs/common';
   import { RolesGuard } from '../../common/guards/roles.guard';
   import { ApiTags } from '@nestjs/swagger';
@@ -24,9 +26,25 @@ export class ReportController {
 
     @Public()
     @Get()
-    async getProject(): Promise<Report[]> {
-        return await this.reportService.getReport();
+    async getReports():Promise<Report[]>{
+      return await this.reportService.getReport();
     }
+
+
+    @Public()
+    @Get('/search')
+    async getReport(
+      @Query('q') searchTerm: string,
+      @Query('name') name?: string,
+      @Query('url') url?: string,
+    ): Promise<Report[]> {
+      const reports = await this.reportService.searchReports(searchTerm, { name, url });
+      if (!reports || reports.length === 0) {
+        throw new NotFoundException('No reports found');
+      }
+      return reports;
+    }
+    
 
     @Public()
     @Post()
@@ -81,4 +99,18 @@ export class ReportController {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     stream.pipe(res);
   }
+
+  //   @Public()
+  // @Get('/search')
+  // async searchReports(
+  //   @Query('q') searchTerm: string,
+  //   @Query('name') name?: string,
+  //   @Query('url') url?: string,
+  // ): Promise<Report[]> {
+  //   const reports = await this.reportService.searchReports(searchTerm, { name, url });
+  //   if (!reports || reports.length === 0) {
+  //     throw new NotFoundException('No reports found!!!!!!!');
+  //   }
+  //   return reports;
+  // }
 }

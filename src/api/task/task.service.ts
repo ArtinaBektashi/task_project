@@ -16,9 +16,8 @@ export class TaskService {
     async getTasks():Promise<Task[]>{
     const tasks = await this.taskRepository.getTasks()
 
-        if(!tasks || tasks.length === 0){
+        if(!tasks || tasks.length === 0)
             throw new NotFoundException('No tasks found');
-        }
 
       return tasks;
     }
@@ -44,21 +43,19 @@ export class TaskService {
         const taskExists = await this.taskRepository.findOneBy({
             name: data.name,
           });
-          if (taskExists) {
+          if (taskExists) 
             throw new ConflictException(
               `A task with name ${data.name} already exists`,
             );
-          }
-          return await this.taskRepository.createTask(data);
+        return await this.taskRepository.createTask(data);
     }
 
 
     async updateTask(taskId:string, data:UpdateTaskDto):Promise<Task>{
         const task = await this.getTaskById(taskId)
         
-            if (!task) {
+            if (!task) 
                 throw new NotFoundException('Task not found');
-            }
 
         return await this.taskRepository.updateTask(taskId,data)
     }
@@ -67,9 +64,8 @@ export class TaskService {
     async removeTask(taskId:string):Promise<void>{
         const task = await this.getTaskById(taskId)
         
-           if (!task) {
+           if (!task) 
                throw new NotFoundException('Task not found');
-           }
 
         await this.taskRepository.removeTask(taskId)
     }
@@ -79,9 +75,8 @@ export class TaskService {
         const { taskId , userId } = data;
         const user = await this.userService.findOne(userId);
 
-            if(!user) {
+            if(!user) 
                 throw new NotFoundException('User not found');
-            }
 
         const task = await this.taskRepository.findOne({
             where:{
@@ -90,9 +85,8 @@ export class TaskService {
             relations:['user']
         })
 
-           if (!task) {
+           if (!task) 
                throw new NotFoundException('Task not found');
-           }
 
         task.user=user;
         await this.taskRepository.save(task)
@@ -105,9 +99,8 @@ export class TaskService {
         const {taskId, projectId} = data;
         const project= await this.projectService.getProjectById(projectId);
 
-            if(!project) {
+            if(!project) 
                 throw new NotFoundException('Project not found');
-            }
 
         const task= await this.taskRepository.findOne({
             where:{
@@ -124,5 +117,4 @@ export class TaskService {
         await this.taskRepository.save(task);
         return task;
     }
-
 }

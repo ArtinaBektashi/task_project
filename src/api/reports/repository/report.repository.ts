@@ -24,6 +24,5 @@ export class ReportRepository extends BaseCustomRepository<Report>
         const report = await this.findOneBy({uuid: id});
         return report;
     }
-    
 }
 

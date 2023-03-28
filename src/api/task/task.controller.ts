@@ -1,16 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Req } from "@nestjs/common/decorators";
 import { ApiTags } from "@nestjs/swagger";
+import { Request } from "express";
 import { Public } from "src/common/decorators/public.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { CreateTaskDto, UpdateTaskDto } from "./dtos/task.dto";
 import { Task } from "./entities/task.entity";
+import { TaskRepository } from "./repository/task.repository";
 import { TaskService } from "./task.service";
 
 @UseGuards(new RolesGuard())
 @ApiTags('task')
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(private readonly taskService: TaskService, private readonly taskRepository : TaskRepository) {}
 
   //@Roles(UserRoles.ADMIN)
   @Public()
@@ -55,5 +58,16 @@ export class TaskController {
     @Post('/addTaskToProject')
     async addTaskToProject(@Body() data: {taskId:string, projectId:string}){
         return await this.taskService.addTaskToProject(data)
+    }
+
+    @Public()
+    @Get('filtered')
+    async filtered(@Req() req:Request){
+      const builder = await this.taskRepository.createQueryBuilder('task');
+
+      if(req.query.s){
+        builder.where("task.name LIKE :s OR task.description LIKE :s",{s: `%${req.query.s}%`})
+      }
+      return await builder.getMany()
     }
 }

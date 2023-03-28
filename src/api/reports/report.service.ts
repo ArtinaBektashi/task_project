@@ -23,9 +23,8 @@ export class ReportService{
         async getReport(): Promise<Report[]> {
             const reports = await this.reportRepository.getReport();
             
-              if (!reports || reports.length === 0) {
+              if (!reports || reports.length === 0) 
                 throw new NotFoundException('No reports found');
-              }
 
             return reports;
         }
@@ -50,13 +49,11 @@ export class ReportService{
             const reportExists = await this.reportRepository.findOneBy({
               name: createReportDto.name,
             });
-              if (reportExists) {
+              if (reportExists) 
                 throw new ConflictException(
                   `A report with name ${createReportDto.name} already exists`,
                 );
-              }
             return await this.reportRepository.createReport(createReportDto);
-
         }
 
 
@@ -64,9 +61,8 @@ export class ReportService{
           const { reportId, projectId } = data;
           const project = await this.projectService.getProjectById(projectId);
 
-            if (!project) {
+            if (!project)
               throw new NotFoundException('Project not found');
-            }
 
           const report = await this.reportRepository.findOne({
             where: {
@@ -75,13 +71,11 @@ export class ReportService{
             relations: ['project'],
           });
 
-            if (!report) {
+            if (!report) 
               throw new NotFoundException('Report not found');
-            }
 
           report.project = project;
           await this.reportRepository.save(report);
-
           return report;
         }
         
@@ -90,10 +84,9 @@ export class ReportService{
           const { reportId, userId } = data;
           const user = await this.userService.findOne(userId);
 
-            if (!user) {
+            if (!user) 
               throw new NotFoundException('User not found');
-            }
-
+  
           const report = await this.reportRepository.findOne({
             where: {
               uuid: reportId,
@@ -101,13 +94,11 @@ export class ReportService{
             relations: ['user'],
           });
 
-            if (!report) {
+            if (!report) 
               throw new NotFoundException('Report not found');
-            }
 
           report.user = user;
           await this.reportRepository.save(report);
-
           return report;
         }
     
@@ -179,5 +170,29 @@ export class ReportService{
           stream.push(null);
       
           return { fileName, stream };
+        }
+
+        // async searchReports(searchTerm: string): Promise<Report[]> {
+        //   const queryBuilder = this.reportRepository.createQueryBuilder('report');
+        //   const reports = await queryBuilder.leftJoinAndSelect('report.user')
+        //     .where('report.name ILIKE :searchTerm OR report.url ILIKE :searchTerm',{searchTerm : `%${searchTerm}%`}).getMany();
+        //     return reports;
+        // }
+
+        async searchReports(searchTerm: string, options: { name?: string, url?: string } = {}): Promise<Report[]> {
+          const { name, url } = options;
+          const reports = await this.reportRepository.createQueryBuilder('report')
+            .leftJoinAndSelect('report.project', 'project')
+            .leftJoinAndSelect('report.user', 'user')
+            .where('report.name LIKE :searchTerm OR project.url LIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
+            .andWhere(name ? 'report.name = :name' : '1=1', { name })
+            .andWhere(url ? 'project.url = :url' : '1=1', { url })
+            .getMany();
+        
+          if (!reports || reports.length === 0) {
+            throw new NotFoundException('No reports found');
+          }
+        
+          return reports;
         }
 }
